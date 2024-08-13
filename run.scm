@@ -582,4 +582,76 @@
         ))
     ))
 
+(define (torque branch)
+    (* (branch-length branch) (total-weight (branch-structure branch))))
+
+(define (balanced? mobile)
+    (if (not (pair? mobile))
+    true
+    (and (= (torque (left-branch mobile)) (torque (right-branch mobile)))
+        (balanced? (branch-structure (left-branch mobile)))
+        (balanced? (branch-structure (right-branch mobile)))
+    )
+    ))
 ; map over trees
+
+
+(define (filter predicate sequence)
+    (cond ((null? sequence) nil)
+        ((predicate (car sequence))
+        (cons (car sequence)
+            (filter predicate
+                (cdr sequence)
+            )
+            )
+        )
+    (else (filter predicate
+        (cdr sequence)))
+    
+    ))
+
+(define (accumulate op initial sequence)
+    (if (null? sequence)
+        initial
+
+        (op (car sequence)
+            (accumulate op
+                initial
+                (cdr sequence)
+            )
+        )
+    ))
+
+(define (enumerate-interval low high)
+    (if (> low high)
+    nil
+    (cons low 
+        (enumerate-interval
+        (+ low 1)
+        high
+        )
+    )
+    ))
+
+; solve the queens board problem
+
+(define (queens board-size)
+    (define (queen-cols k)
+        (if (= k 0)
+            (list empty-board)
+            (filter
+                (lambda (positions)
+                    (safe? k positions)
+                )
+                (flatmap
+                    (lambda (rest-of-queens)
+                        (map (lambda (new-row)
+                        (adjoin-positions
+                        new-row)
+                        ))
+                    )
+                )
+            )
+
+        
+        )))
